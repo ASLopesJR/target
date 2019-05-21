@@ -1,5 +1,5 @@
 function hist_plot(data_real,data_simulated)
-    % data = (events,nPMT)
+    
     %********************************
     %PARÂMETROS GLOBAIS AJUSTÁVEIS
     %********************************
