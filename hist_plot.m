@@ -1,17 +1,16 @@
-function hist_plot(data_real,data_simulated)
+function hist_plot(data_simulation,data_real)
     % data = (events,nPMT)
     %********************************
-    %PARÂMETROS GLOBAIS AJUST�?VEIS
+    %PARÂMETROS GLOBAIS AJUST�?VEIS
     %********************************
     TH = 0; %threshold de dispado
-    
-    data_OverTh = (data_simulated'>TH); %matriz 32x10000
+    data_OverTh = (data_simulation'>TH); %matriz 32x10000
 
 
     %----------------------------------------------------------------------------------------
     %número de PMTs disparadas por evento (-->vetor de 10000)
     %----------------------------------------------------------------------------------------
-    Ndisp = sum(data_OverTh,1);
+    Ndisp = sum(data_OverTh,2);
     %figure;
     histogram(Ndisp, -0.5:33,'Normalization','probability');
     set(gca, 'YScale', 'log');
