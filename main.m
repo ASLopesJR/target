@@ -29,9 +29,13 @@ hold on
 bar(bars.r(1,:),adj*bars.r(2,:)/norm.r,'FaceColor','none','EdgeColor','b')
 legend('simulado','real')
 %% energy histograms
-energyboxplot(data_max)
-energyboxplot(simulation)
-
+[xr,yr] = energyboxplot(data_max,3);
+[xs,ys] = energyboxplot(simulation,3);
+close all
+boxplot(xr, yr, 'whisker', 500);
+hold on
+b = boxplot(xs, ys, 'whisker', 500,'Notch','on');
+legend('real','simulado')
 
 
 %% Rafael
