@@ -16,18 +16,11 @@ hist_plot(simulation,data_max)
 
 
 %% energy plots
-corte = 500;
-[bars.s,bars.r,norm] = energyHist(simulation,data_max,500);
+[bars.s,bars.r,norm] = energyHist(simulation,data_max);
 bar(bars.s(1,:),bars.s(2,:)/norm.s,'FaceColor','none','EdgeColor','k')
 hold on
-bar(bars.r(1,:),bars.r(2,:)/norm.r,'FaceColor','none','EdgeColor','b')
-legend('simulado','real')
-figure()
-adj = (max(bars.s(2,:))/norm.s)/(max(bars.r(2,:))/norm.r);
-bar(bars.s(1,:),bars.s(2,:)/norm.s,'FaceColor','none','EdgeColor','k')
-hold on
-bar(bars.r(1,:),adj*bars.r(2,:)/norm.r,'FaceColor','none','EdgeColor','b')
-legend('simulado','real')
+
+
 %% energy histograms
 energyboxplot(data_max)
 energyboxplot(simulation)
