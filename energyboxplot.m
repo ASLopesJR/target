@@ -1,5 +1,4 @@
-function energyboxplot(peakAmpVar)
-    TH = 3;
+function[x,g]  = energyboxplot(peakAmpVar,TH)
     data_OverTh = (peakAmpVar>=TH);
     energia_ADCcnt = sum(peakAmpVar);
     ADC_TO_PE = 0.0098/0.006875;
@@ -12,9 +11,9 @@ function energyboxplot(peakAmpVar)
 
 k=0;
 UNIT = 1; %0 = ADC count // 1 = p.e.
-INIT = 21;
-END = 26;
-figure;
+INIT = 1;
+END = 32;
+%figure;
 for iNPMTs = INIT:END %número de PMTs de interesse
    k = k+1;
    xVar(k) = iNPMTs;
@@ -31,10 +30,10 @@ for iNPMTs = INIT:END %número de PMTs de interesse
          g = [g; iNPMTs*ones(length(energia_ADCcnt(idx)), 1)];
       end
      
-      meanVar(k) = mean2(energia_ADCcnt(idx));
-      stdVar(k) = std2(energia_ADCcnt(idx));
-      minVar(k) = min(energia_ADCcnt(idx));
-      maxVar(k) = max(energia_ADCcnt(idx));
+      %meanVar(k) = mean2(energia_ADCcnt(idx));
+      %stdVar(k) = std2(energia_ADCcnt(idx));
+      %minVar(k) = min(energia_ADCcnt(idx));
+      %maxVar(k) = max(energia_ADCcnt(idx));
       xlabel('Event energy (peak amplitude in ADC counts)') % x-axis label
 
    else
@@ -48,10 +47,10 @@ for iNPMTs = INIT:END %número de PMTs de interesse
          g = [g; iNPMTs*ones(length(energia_pe(idx)), 1)];
       end
 
-      meanVar(k) = mean2(energia_pe(idx));
-      stdVar(k) = std2(energia_pe(idx));
-      minVar(k) = min(energia_pe(idx));
-      maxVar(k) = max(energia_pe(idx));
+      %meanVar(k) = mean2(energia_pe(idx));
+      %stdVar(k) = std2(energia_pe(idx));
+      %minVar(k) = min(energia_pe(idx));
+      %maxVar(k) = max(energia_pe(idx));
       xlabel('Event energy (p.e.)') % x-axis label
    end
 
@@ -64,16 +63,18 @@ for iNPMTs = INIT:END %número de PMTs de interesse
    legend(num2str(iNPMTs));
 end
 
-figure;
-boxplot(x, g, 'whisker', 500);
-xlabel('Number of PMTs in coincidence');
+%figure;
+%boxplot(x, g, 'whisker', 500);
+%xlabel('Number of PMTs in coincidence');
 
-if UNIT==0
-   ylabel('Event energy (peak amplitude in ADC counts)'); % x-axis label
-else
-   ylabel('Event energy (p.e.)'); % x-axis label
-end
-set(gca, 'YScale', 'log');
+%if UNIT==0
+%   ylabel('Event energy (peak amplitude in ADC counts)'); % x-axis label
+%else
+    
+    
+%   ylabel('Event energy (p.e.)'); % x-axis label
+%end
+%set(gca, 'YScale', 'log');
 
 
 
