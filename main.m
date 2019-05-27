@@ -4,12 +4,15 @@ close all
 %% load simulation data 
 % row -> events
 % col -> pmt number (1:16 = sup) (16:32 = inf)
+load('../../target_files/data_sim_tvek.mat');
 load('../../target_files/data_sim.mat');
 
 %% load real data
 filename = 'data_max_SemFit';
 load(['../../target_files/' filename]);
-simulation = table2array(simulation)';
+%
+simulation_tvk = (0.006875/0.0098)*(pmtstargettvek)';
+simulation_gore = (0.006875/0.0098)*table2array(simulation)';
 
 %% histograma n events/pmt (realxsim)
 hist_plot(simulation,data_max)
@@ -17,17 +20,21 @@ hist_plot(simulation,data_max)
 
 %% energy plots
 corte = 500;
-[bars.s,bars.r,norm] = energyHist(simulation,(6381/1357)*data_max,corte);
+[bars.s,bars.r,norm] = energyHist(simulation_gore,simulation_tvk,corte);
+bar(bars.s(1,:),bars.s(2,:)/norm.s,'FaceColor','none','EdgeColor','k')
+hold on
+bar(bars.r(1,:),bars.r(2,:)/norm.r,'FaceColor','none','EdgeColor','b')
+legend('simulado gore','simulado tvk')
+
+
+
+corte = 500;
+[bars.s,bars.r,norm] = energyHist(simulation,data_max,corte);
 bar(bars.s(1,:),bars.s(2,:)/norm.s,'FaceColor','none','EdgeColor','k')
 hold on
 bar(bars.r(1,:),bars.r(2,:)/norm.r,'FaceColor','none','EdgeColor','b')
 legend('simulado','real')
-figure()
-adj = (max(bars.s(2,:))/norm.s)/(max(bars.r(2,:))/norm.r);
-bar(bars.s(1,:),bars.s(2,:)/norm.s,'FaceColor','none','EdgeColor','k')
-hold on
-bar(bars.r(1,:),bars.r(2,:)/norm.r,'FaceColor','none','EdgeColor','b')
-legend('simulado','real')
+
 %% energy histograms
 [xr,yr] = energyboxplot(data_max,3);
 [xs,ys] = energyboxplot(simulation,3);
@@ -42,19 +49,6 @@ legend('real','simulado')
 %% Rafael
 
 peakAmpVar = data_max;
-%*******************************
-%----------------------------------------------------------------------------------------
-%Distribuição de amplitude de pico nas PMTs (Sem soma...)
-%----------------------------------------------------------------------------------------
-figure;
-histogram(peakAmpVar(peakAmpVar~=0));
-set(gca, 'YScale', 'log');
-xlabel('PMT energy (amplitude in ADC counts)') % x-axis label
-ylabel('Events') % y-axis label
-
-%----------------------------------------------------------------------------------------
-%energia máxima em uma PMT por evento em ADC counts
-%----------------------------------------------------------------------------------------
 [M,I]=max(peakAmpVar);
 figure;
 idx1 = find(M~=0);
@@ -62,6 +56,18 @@ histogram(M(idx1), 50, 'FaceColor','k','EdgeColor', 'k'); %histograma das máxim
 set(gca, 'YScale', 'log');
 xlabel('Energy in the most energetic PMT (amplitude in ADC counts)') % x-axis label
 ylabel('Events') % y-axis label
+figure()
+
+
+peakAmpVar = simulation;
+[M,I]=max(peakAmpVar);
+idx1 = find(M~=0);
+histogram(M(idx1), 50, 'FaceColor','k','EdgeColor', 'k'); %histograma das máximos
+set(gca, 'YScale', 'log');
+xlabel('Energy in the most energetic PMT (amplitude in ADC counts)') % x-axis label
+ylabel('Events') % y-axis label
+
+
 
 %SUPERIOR
 %[M,I]=max(peakAmpVar(1:16, :));
@@ -142,7 +148,7 @@ set(gca, 'YScale', 'log');
 save = 0;
 step = 200;
 upLimit = 1;
-for i = 0:upLimit;
+for i = 0:upLimit
 
    if i == 0 iLim = 3+step*i;
    else iLim = step*i;
