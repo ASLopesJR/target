@@ -11,7 +11,7 @@ function[x,g]  = energyboxplot(peakAmpVar,TH)
 
 k=0;
 UNIT = 1; %0 = ADC count // 1 = p.e.
-INIT = 18;
+INIT = 1;
 END = 32;
 %figure;
 for iNPMTs = INIT:END %número de PMTs de interesse

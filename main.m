@@ -17,7 +17,7 @@ hist_plot(simulation,data_max)
 
 %% energy plots
 corte = 500;
-[bars.s,bars.r,norm] = energyHist(simulation,data_max,500);
+[bars.s,bars.r,norm] = energyHist(simulation,(6381/1357)*data_max,corte);
 bar(bars.s(1,:),bars.s(2,:)/norm.s,'FaceColor','none','EdgeColor','k')
 hold on
 bar(bars.r(1,:),bars.r(2,:)/norm.r,'FaceColor','none','EdgeColor','b')
@@ -26,15 +26,16 @@ figure()
 adj = (max(bars.s(2,:))/norm.s)/(max(bars.r(2,:))/norm.r);
 bar(bars.s(1,:),bars.s(2,:)/norm.s,'FaceColor','none','EdgeColor','k')
 hold on
-bar(bars.r(1,:),adj*bars.r(2,:)/norm.r,'FaceColor','none','EdgeColor','b')
+bar(bars.r(1,:),bars.r(2,:)/norm.r,'FaceColor','none','EdgeColor','b')
 legend('simulado','real')
 %% energy histograms
 [xr,yr] = energyboxplot(data_max,3);
 [xs,ys] = energyboxplot(simulation,3);
 close all
 boxplot(xr, yr, 'whisker', 500);
+set(gca, 'YScale', 'log');
 hold on
-b = boxplot(xs, ys, 'whisker', 500,'Notch','on');
+boxplot(xs, ys, 'whisker', 500);
 legend('real','simulado')
 
 
