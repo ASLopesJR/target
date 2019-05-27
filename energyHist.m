@@ -7,16 +7,16 @@ peakAmpVar(peakAmpVar<TH) = 0; %zerando as amplitudes abaixo de TH
 energia_ADCcnt = sum(peakAmpVar);
 if(strcmp(type,'ADC'))
    BIN = 600;
-   YLIM = [0 140];
+   YLIM = [0 .1];
 else
    energia_ADCcnt = energia_ADCcnt*ADC_TO_PE; 
    BIN = 300;
-   YLIM = [0 240];
+   YLIM = [0 .1];
 end    
 
 
-h = histogram (energia_ADCcnt, BIN);
-h.FaceColor = 'black';
+h = histogram (energia_ADCcnt, BIN,'Normalization','probability');
+h.FaceColor = 'none';
 h.FaceAlpha = rand;
 
 XLIM = [0 max(energia_ADCcnt,[],'all')];
