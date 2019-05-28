@@ -12,15 +12,16 @@ filename = 'data_max_SemFit';
 load(['../../target_files/' filename]);
 %
 simulation_tvk = (0.006875/0.0098)*(pmtstargettvek)';
+simulation_tvk_abs = (0.006875/0.0098)*(pmttyvekAbsmenor)';
 simulation_gore = (0.006875/0.0098)*table2array(simulation)';
 
 %% histograma n events/pmt (realxsim)
-hist_plot(simulation,data_max)
+hist_plot(simulation_tvk_abs,data_max)
 
 
 %% energy plots
 corte = 500;
-[bars.s,bars.r,norm] = energyHist(simulation_gore,simulation_tvk,corte);
+[bars.s,bars.r,norm] = energyHist(simulation_gore,simulation_tvk_abs,corte);
 bar(bars.s(1,:),bars.s(2,:)/norm.s,'FaceColor','none','EdgeColor','k')
 hold on
 bar(bars.r(1,:),bars.r(2,:)/norm.r,'FaceColor','none','EdgeColor','b')
