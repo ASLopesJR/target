@@ -1,8 +1,5 @@
 function hist_plot(data_simulation,data_real)
-    % data = (events,nPMT)
-    %********************************
-    %PARÂMETROS GLOBAIS AJUST�?VEIS
-    %********************************
+    
     TH = 0; %threshold de dispado
     data_OverTh = (data_simulation'>TH); %matriz 32x10000
 
@@ -12,7 +9,7 @@ function hist_plot(data_simulation,data_real)
     %----------------------------------------------------------------------------------------
     Ndisp = sum(data_OverTh,2);
     %figure;
-    histogram(Ndisp, -0.5:33,'Normalization','probability');
+    histogram(Ndisp, -0.5:33,'Normalization','probability','FaceColor','none','EdgeColor','k','FaceAlpha',0.2,'LineStyle','--');
     set(gca, 'YScale', 'log');
     xlim([-0.5 32.5]);
     xlabel('Number of fired PMTs') % x-axis label
@@ -21,14 +18,14 @@ function hist_plot(data_simulation,data_real)
 
     hold on
 
-    TH = 3; %threshold de dispado
+    TH = 4; %threshold de dispado
     
     data_OverTh = (data_real'>TH); %matriz 32x10000
     Ndisp = sum(data_OverTh,2);
     Ndisp = Ndisp(Ndisp>0);
     %figure;
 
-    histogram(Ndisp, -0.5:33,'Normalization','probability');
+    histogram(Ndisp, -0.5:33,'Normalization','probability','FaceColor','none','EdgeColor','k');
     set(gca, 'YScale', 'log');
     xlim([-0.5 32.5]);
     xlabel('Number of fired PMTs') % x-axis label

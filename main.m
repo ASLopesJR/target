@@ -1,72 +1,106 @@
 clear variables
 clc
 close all
+%% constants
+PE_TO_ADC          = (0.006875/0.0098);
+
 %% load simulation data 
 % row -> events
 % col -> pmt number (1:16 = sup) (16:32 = inf)
 load('../../target_files/data_sim_tvek.mat');
 load('../../target_files/data_sim.mat');
+load('../../target_files/data_sim_tvek_abs_maior.mat')
+simulation_tvk     = (pmtstargettvek)';
+simulation_tvk_abs = (pmttyvekAbsmaior)';
+simulation_gore    = table2array(simulation)';
 
 %% load real data
 filename = 'data_max_SemFit';
 load(['../../target_files/' filename]);
-%
-simulation_tvk = (0.006875/0.0098)*(pmtstargettvek)';
-simulation_tvk_abs = (0.006875/0.0098)*(pmttyvekAbsmenor)';
-simulation_gore = (0.006875/0.0098)*table2array(simulation)';
+data_real         = round((1/PE_TO_ADC)*data_max);  
+
+
+clear filename simulation pmtstargettvek pmttyvekAbsmaior data_max
 
 %% histograma n events/pmt (realxsim)
-hist_plot(simulation_tvk_abs,data_max)
-
+hist_plot(simulation_tvk,data_real)
+legend('simulation','real')
 
 %% energy plots
 corte = 500;
-[bars.s,bars.r,norm] = energyHist(simulation_gore,simulation_tvk_abs,corte);
-bar(bars.s(1,:),bars.s(2,:)/norm.s,'FaceColor','none','EdgeColor','k')
+[bars.s,bars.r,norm] = energyHist(data_max,simulation_tvk,corte);
+stairs(bars.s(1,:),bars.s(2,:)/norm.s,'LineStyle','--','LineWidth',1.0,'Color','k')
 hold on
-bar(bars.r(1,:),bars.r(2,:)/norm.r,'FaceColor','none','EdgeColor','b')
-legend('simulado gore','simulado tvk')
+stairs(bars.r(1,:),bars.r(2,:)/norm.r,'LineStyle','-','LineWidth',1.0,'Color','k')
+legend('real data','simulation tvk')
+xlim([corte 15000])
 
-
-
-corte = 500;
-[bars.s,bars.r,norm] = energyHist(simulation,data_max,corte);
-bar(bars.s(1,:),bars.s(2,:)/norm.s,'FaceColor','none','EdgeColor','k')
-hold on
-bar(bars.r(1,:),bars.r(2,:)/norm.r,'FaceColor','none','EdgeColor','b')
-legend('simulado','real')
 
 %% energy histograms
-[xr,yr] = energyboxplot(data_max,3);
-[xs,ys] = energyboxplot(simulation,3);
+
+
+[xr,yr] = energyboxplot(data_real,4);
+[xs,ys] = energyboxplot(simulation_tvk,4);
 close all
-boxplot(xr, yr, 'whisker', 500);
+count  = 1;
+for i = 1:1:32
+    
+       l{count} = ['R' int2str(i)];
+       l{count+1} = ['Si' int2str(i)];
+       count = count + 2;
+end
+boxplot([xr;xs], [yr-0.3;ys+0.3], 'whisker', 500,'Label',l);
+xtickangle(90)
 set(gca, 'YScale', 'log');
-hold on
-boxplot(xs, ys, 'whisker', 500);
-legend('real','simulado')
 
-
-%% Rafael
-
-peakAmpVar = data_max;
+%% Events peak
+ax = subplot(1,1,1);
+peakAmpVar = data_real;
 [M,I]=max(peakAmpVar);
-figure;
 idx1 = find(M~=0);
-histogram(M(idx1), 50, 'FaceColor','k','EdgeColor', 'k'); %histograma das máximos
+[ym,xm]       = histcounts(M(idx1), 50);
+stairs(ax,xm(1:end-1),ym/(sum(diff(xm).*ym)),'LineStyle','-','LineWidth',1.0,'Color','k')
+xlabel('Energy in the most energetic PMT (amplitude in PE counts)') % x-axis label
+ylabel('Events') % y-axis label
+
+
+ax2 = subplot(1,1,1);
+
+
+%SUPERIOR
+%[M,I]=max(peakAmpVar(1:16, :));
+idx2 = find(M~=0 & I<=16);
+histogram(ax2,M(idx2), 50, 'FaceColor','r','EdgeColor', 'r'); %histograma das máximos
 set(gca, 'YScale', 'log');
 xlabel('Energy in the most energetic PMT (amplitude in ADC counts)') % x-axis label
 ylabel('Events') % y-axis label
-figure()
+hold(ax2,'on')
+%INFERIOR
+%[M,I]=max(peakAmpVar(17:32, :));
+idx3 = find(M~=0 & I>16);
+histogram(ax2,M(idx3), 50, 'FaceColor','b','EdgeColor', 'b'); %histograma das máximos
+%set(gca, 'YScale', 'log');
+%xlabel('Energy in the most energetic PMT (amplitude in ADC counts)') % x-axis label
+%ylabel('Events') % y-axis label
+%legend('FULL DETECTOR', ['SUP (' num2str((length(idx2)/length(idx1))*100, '%0.1f') '%)' ], ['INF (' num2str((length(idx3)/length(idx1))*100, '%0.1f') '%)' ]);
+%alpha(0.2);
 
 
-peakAmpVar = simulation;
+
+
+hold(ax,'on')
+peakAmpVar = simulation_tvk;
 [M,I]=max(peakAmpVar);
 idx1 = find(M~=0);
-histogram(M(idx1), 50, 'FaceColor','k','EdgeColor', 'k'); %histograma das máximos
-set(gca, 'YScale', 'log');
-xlabel('Energy in the most energetic PMT (amplitude in ADC counts)') % x-axis label
-ylabel('Events') % y-axis label
+[ym,xm]       = histcounts(M(idx1), 50);
+stairs(ax,xm(1:end-1),ym/(sum(diff(xm).*ym)),'LineStyle','--','LineWidth',1.0,'Color','k')
+legend('Real','Simulation')
+
+
+
+
+
+
 
 
 
