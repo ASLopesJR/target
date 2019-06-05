@@ -28,7 +28,7 @@ legend('simulation','real')
 
 %% energy plots
 corte = 500;
-[bars.s,bars.r,norm] = energyHist(data_max,simulation_tvk,corte);
+[bars.s,bars.r,norm] = energyHist(data_real,simulation_tvk,corte);
 stairs(bars.s(1,:),bars.s(2,:)/norm.s,'LineStyle','--','LineWidth',1.0,'Color','k')
 hold on
 stairs(bars.r(1,:),bars.r(2,:)/norm.r,'LineStyle','-','LineWidth',1.0,'Color','k')
